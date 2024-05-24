@@ -86,6 +86,7 @@ Exemple d'installation de l'embedding nomic-embed-text :
 ```sh
 ollama pull nomic-embed-text
 ```
+Lancez le logiciel Ollama
 
 ## Créer la base de données
 ```sh
@@ -96,7 +97,7 @@ L'option '--reset' permet de supprimer les données existantes de la base de don
 ## Pour voir les résultats d'une requête dans le terminal :
 
 ```sh
-python query_data "Bonjour"
+python query_data.py "Bonjour"
 ```
 
 ## Lancer le serveur API
