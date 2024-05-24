@@ -76,8 +76,10 @@ pip install -r requirements.txt
 ```
 
 ## Ajouter vos documents
-Ajoutez vos documents .xls dans le dossier data/excel. Les fichiers .xlsm semblent moins pertinents.
-Ajoutez vos documents .pdf dans le dossier data/pdf.
+Ajoutez vos documents .xls dans le dossier data. Les fichiers .xlsm semblent moins pertinents.
+
+On ne peut ajouter qu'un type de fichier, on ne peut pas ajouter des pdf et des xlsx il faut faire un choix,
+pour changer vers pdf il y a des commentaire explicatif dans populate_database.py
 
 ## Installer Ollama et le langage embedding souhaité
 Rendez-vous sur Ollama pour l'installation: https://ollama.com/ 
