@@ -54,8 +54,9 @@ Nous vous conseillons d'utiliser la page 'Chat avec Images' car c'est la plus av
 
 # Python Langchain RAG Setup
 
-## Créer un environnement virtuel Python
+## Créer un environnement virtuel Python à la base de votre projet
 ```sh
+cd..
 python -m venv lang_rag
 cd lang_rag
 .\Scripts\Activate.ps1
