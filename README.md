@@ -16,8 +16,6 @@ cd compas-assistant-rag
 ```shell
 OPENAI_API_KEY = 'sk-proj-...'
 ASSISTANT_ID = 'asst_...'
-DEWY_ENDPOINT= 'http://localhost:8000'
-DEWY_COLLECTION= 'main'
 ```
 (Dans un fichier `.env.local` que vous devez créer).
 
@@ -56,10 +54,54 @@ Nous vous conseillons d'utiliser la page 'Chat avec Images' car c'est la plus av
 
 # Python Langchain RAG Setup
 
+## Créer un environnement virtuel Python
+```sh
+python -m venv lang_rag
+cd lang_rag
+.\Scripts\Activate.ps1
+```
 
-#### Backend Python (common/collection_embeddings.py) : tri des chunks de documents par score
-  - Ajouter `DESC` après `ORDER BY` à la ligne 66.
-  - Ajouter `DESC` après `ORDER BY` à la ligne 77.
-  - Après la ligne 86, ajouter `ORDER BY relevant_embeddings.score DESC`.
+##Importer les fichiers du projet
+```sh
+git clone https://github.com/DenezG/python_rag.git
+```
 
-Le problème est désormais résolu, relancer dewy et votre appli next. Dewy fonctionne parfaitement.
+##Installer les dépendances
+L'installation des modules peut prendre plusieurs minutes :
+
+```sh
+pip install -r requirements.txt
+```
+
+##Ajouter vos documents
+Ajoutez vos documents .xls dans le dossier data/excel. Les fichiers .xlsm semblent moins pertinents.
+Ajoutez vos documents .pdf dans le dossier data/pdf.
+
+##Installer Ollama et le langage embedding souhaité
+Rendez-vous sur Ollama pour l'installation: https://ollama.com/ 
+
+Exemple d'installation de l'embedding nomic-embed-text :
+```sh
+ollama pull nomic-embed-text
+```
+
+##Créer la base de données
+```sh
+python .\populate_database.py --reset
+```
+L'option '--reset' permet de supprimer les données existantes de la base de données.
+
+##Pour voir les résultats d'une requête dans le terminal :
+
+```sh
+python query_data "Bonjour"
+```
+
+##Lancer le serveur API
+```sh
+unvicorn backend:app --reload
+```
+
+##Accéder aux résultats
+Par défaut, si vous n'avez pas changé l'adresse uvicorn, le résultat est disponible ici :
+http://127.0.0.1:8000/query/
