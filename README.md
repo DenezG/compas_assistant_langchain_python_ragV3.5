@@ -61,23 +61,23 @@ cd lang_rag
 .\Scripts\Activate.ps1
 ```
 
-##Importer les fichiers du projet
+## Importer les fichiers du projet
 ```sh
 git clone https://github.com/DenezG/python_rag.git
 ```
 
-##Installer les dépendances
+## Installer les dépendances
 L'installation des modules peut prendre plusieurs minutes :
 
 ```sh
 pip install -r requirements.txt
 ```
 
-##Ajouter vos documents
+## Ajouter vos documents
 Ajoutez vos documents .xls dans le dossier data/excel. Les fichiers .xlsm semblent moins pertinents.
 Ajoutez vos documents .pdf dans le dossier data/pdf.
 
-##Installer Ollama et le langage embedding souhaité
+## Installer Ollama et le langage embedding souhaité
 Rendez-vous sur Ollama pour l'installation: https://ollama.com/ 
 
 Exemple d'installation de l'embedding nomic-embed-text :
@@ -85,23 +85,23 @@ Exemple d'installation de l'embedding nomic-embed-text :
 ollama pull nomic-embed-text
 ```
 
-##Créer la base de données
+## Créer la base de données
 ```sh
 python .\populate_database.py --reset
 ```
 L'option '--reset' permet de supprimer les données existantes de la base de données.
 
-##Pour voir les résultats d'une requête dans le terminal :
+## Pour voir les résultats d'une requête dans le terminal :
 
 ```sh
 python query_data "Bonjour"
 ```
 
-##Lancer le serveur API
+## Lancer le serveur API
 ```sh
 unvicorn backend:app --reload
 ```
 
-##Accéder aux résultats
+## Accéder aux résultats
 Par défaut, si vous n'avez pas changé l'adresse uvicorn, le résultat est disponible ici :
 http://127.0.0.1:8000/query/
