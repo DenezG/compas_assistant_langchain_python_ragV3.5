@@ -104,7 +104,7 @@ python query_data.py "Bonjour"
 
 ## Lancer le serveur API
 ```sh
-unvicorn backend:app --reload
+uvicorn backend:app --reload
 ```
 
 ## Accéder aux résultats
