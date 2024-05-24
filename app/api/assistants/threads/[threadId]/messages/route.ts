@@ -1,12 +1,8 @@
 import { assistantId } from "@/app/assistant-config";
 import { openai } from "@/app/openai";
-import { Dewy } from 'dewy-ts'; 
 
 export const runtime = "nodejs";
 
-const dewy = new Dewy({
-  BASE: process.env.DEWY_ENDPOINT
-})
 
 // Send a new message to a thread
 export async function POST(request, { params: { threadId } }) {
@@ -15,13 +11,6 @@ export async function POST(request, { params: { threadId } }) {
   const rag_context = await fetch('http://127.0.0.1:8000/query/${content}');
   const context = await rag_context.json();
 
-
-  console.log(context)
-  /*const context = await dewy.kb.retrieveChunks({
-    collection: process.env.DEWY_COLLECTION ?? "main",
-    query: content,
-    n: 10,
-});*/
 
   await openai.beta.threads.messages.create(threadId,{
     role: 'user',
