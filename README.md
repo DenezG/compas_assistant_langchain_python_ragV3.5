@@ -8,16 +8,14 @@ Template de OpenAI [Assistants API](https://platform.openai.com/docs/assistants/
 
 ### 1. Clone repo
 ```shell
-git clone https://github.com/DenezG/compas-assistant-rag.git
-cd compas-assistant-rag
+git clone https://github.com/DenezG/compas_assistant_langchain_python_ragV3.5.git
+cd .\compas_assistant_langchain_python_ragV3.5\
 ```
 
 ### 2. Configurer votre [OpenAI API key](https://platform.openai.com/api-keys)
 ```shell
 OPENAI_API_KEY = 'sk-proj-...'
 ASSISTANT_ID = 'asst_...'
-DEWY_ENDPOINT= 'http://localhost:8000'
-DEWY_COLLECTION= 'main'
 ```
 (Dans un fichier `.env.local` que vous devez créer).
 
@@ -54,94 +52,61 @@ Nous vous conseillons d'utiliser la page 'Chat avec Images' car c'est la plus av
 - `api/assistants/image` - `POST` : fetch an image by using the fileId of the image
 
 
-# Dewy RAG Setup
-A savoir que pour Dewy suite à des erreurs nous ne pouvons utiliser qu'une seule collection mais cela reste fonctionnel.
+# Python Langchain RAG Setup
 
-## Installation de PostgreSQL
+## Créer un environnement virtuel Python à la base de votre projet
+```sh
+cd..
+python -m venv lang_rag
+cd lang_rag
+.\Scripts\Activate.ps1
+```
 
-Pour mettre en place la base de données PostgreSQL, suivez ces étapes :
+## Importer les fichiers du projet
+```sh
+git clone https://github.com/DenezG/python_rag.git
+```
+Déplacer manuellement les fichiers et dossiers contenues dans python_rag à l'intérieur de lang_rag car sinon l'environnement ne retrouvera pas les fichiers
 
-1. Regardez cette vidéo pour une installation rapide : [Installation de PostgreSQL](https://www.youtube.com/watch?v=KuQUNHCeKCk)
-2. Assurez-vous d'avoir l'URL de base suivante : `postgresql://postgres:admin@localhost:5432/postgres`
-3. L'URL possède cette forme : `postgresql://username:password@localhost:port/databasename`
+## Installer les dépendances
+L'installation des modules peut prendre plusieurs minutes :
 
-## Installation de Dewy
+```sh
+pip install -r requirements.txt
+```
 
-Nous ne pouvons pas avoir configurer dewy dans le github car il possède trop de fichiers.
-Pour installer Dewy et configurer l'environnement, suivez ces étapes :
+## Ajouter vos documents
+Ajoutez vos documents .xls dans le dossier data. Les fichiers .xlsm semblent moins pertinents.
 
-1. Assurez-vous d'avoir la dernière version de Python installée pour avoir pip.
-2. Installez virtual env :
-    ```powershell
-    pip install virtualenv
-    ```
-3. Créer votre environnement virtuel python à la source de votre projet et non dans le dossier compas-assistant:
-   ```powershell
-   cd..
-   python -m venv py-env
-   ```
-4. Activez votre environnement virtuel :
-    ```powershell
-    cd .\py-env\
-    .\Scripts\Activate.ps1
-    ```
-5. Installez setuptools :
-    ```bash
-    pip install setuptools
-    ```
-6. Installez Dewy :
-    ```bash
-    pip install dewy
-    ```
-7. Créez et remplissez un fichier `.env` dans le virtualenv (dossier actuel):
-   ```env
-    ENVIRONMENT=LOCAL
-    DB=postgresql://postgres:admin@localhost:5432/postgres
-    OPENAI_API_KEY='your-api-key'
-   ```
-8. Lancez Dewy :
-    ```bash
-    dewy
-    ```
-9. L'endpoint de Dewy est accessible à l'adresse : [http://localhost:8000/admin](http://localhost:8000/admin)
+On ne peut ajouter qu'un type de fichier, on ne peut pas ajouter des pdf et des xlsx il faut faire un choix,
+pour changer vers pdf il y a des commentaire explicatif dans populate_database.py
 
-Assurez-vous d'ouvrir un nouveau terminal avant de passer à l'étape suivante.
+## Installer Ollama et le langage embedding souhaité
+Rendez-vous sur Ollama pour l'installation: https://ollama.com/ 
 
-## Installation du front-end avec Next.js
+Exemple d'installation de l'embedding nomic-embed-text :
+```sh
+ollama pull nomic-embed-text
+```
+Lancez le logiciel Ollama
 
-Pour installer et exécuter le front-end avec Next.js, suivez ces étapes :
+## Créer la base de données
+```sh
+python .\populate_database.py --reset
+```
+L'option '--reset' permet de supprimer les données existantes de la base de données.
 
+## Pour voir les résultats d'une requête dans le terminal :
 
-1. Accédez au répertoire `compas-assistant-rag` :
-    ```bash
-    cd compas-assistant
-    ```
-    ```
-2. Lancez l'application en mode développement :
-    ```bash
-    npm run dev
-    ```
+```sh
+python query_data.py "Bonjour"
+```
 
-Maintenant il est probable que dewy ai quelques erreurs.
+## Lancer le serveur API
+```sh
+uvicorn backend:app --reload
+```
 
-## dewy errors
-
-#### Backend Python (collections/documents/router.py) Error : Method not allowed pour ajouter doc/col 
-- Modifier les routes de `@post` en `@put` pour les dossiers `collections`: 1 fois et `documents`: 2 fois. Cela résout un problème avec react-admin qui n'utilise pas de post pour sa fonction create.
-  
-#### Backend Python (document/models.py - AddDocumentRequest) Error : Unprocessable Entity
-- Ajouter `= 'main'` à la variable `collection` pour que la requête reçoive correctement l'identifiant de la collection ici 'main', avec cette résolution on ne peut que stocker des documents sur la collection 'main'.
-- TODO : Trouver pourquoi l'identifiant de la collection n'est pas communiquer lors de sa selection.
-
-#### Backend Python (chunk/models.py - RetrieveRequest) Error : les chunks ne s'affichent pas
-- Ajouter `= 'main'` à la variable `collection` pour que la requête reçoive correctement l'identifiant de la collection, problème identique à celui d'avant
-- Cette manipulation permet de rendre les chunks de documents recherchables.
-- TODO : Trouver pourquoi l'identifiant de la collection n'est pas communiquer lors de sa selection.
-
-
-#### Backend Python (common/collection_embeddings.py) : tri des chunks de documents par score
-  - Ajouter `DESC` après `ORDER BY` à la ligne 66.
-  - Ajouter `DESC` après `ORDER BY` à la ligne 77.
-  - Après la ligne 86, ajouter `ORDER BY relevant_embeddings.score DESC`.
-
-Le problème est désormais résolu, relancer dewy et votre appli next. Dewy fonctionne parfaitement.
+## Accéder aux résultats
+Par défaut, si vous n'avez pas changé l'adresse uvicorn, le résultat est disponible ici :
+http://127.0.0.1:8000/query/
