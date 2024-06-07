@@ -68,6 +68,11 @@ git clone https://github.com/DenezG/python_rag.git
 ```
 Déplacer manuellement les fichiers et dossiers contenues dans python_rag à l'intérieur de lang_rag car sinon l'environnement ne retrouvera pas les fichiers
 
+## Configurer le .env
+```sh
+OPENAI_API_KEY = 'sk-proj-...
+```
+
 ## Installer les dépendances
 L'installation des modules peut prendre plusieurs minutes :
 
